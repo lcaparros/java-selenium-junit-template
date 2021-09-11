@@ -5,15 +5,22 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 
 public class ExampleTest {
+    private static final String sleniumGridUrl = "http://localhost:4444";
     private static final String url = "https://www.selenium.dev";
     private static final String headerLink = "https://selenium.dev/";
 
@@ -23,7 +30,7 @@ public class ExampleTest {
 
     @BeforeClass
     public static void beforeClass() {
-        System.setProperty("webdriver.chrome.driver", "/home/hunter/Descargas/chromedriver_linux64/chromedriver");
+//        System.setProperty("webdriver.chrome.driver", "drivers/chrome/chromedriver");
     }
 
     @Before
@@ -36,7 +43,11 @@ public class ExampleTest {
         options.addArguments("--disable-dev-shm-usage"); // overcome limited resource problems
         options.addArguments("--no-sandbox"); // Bypass OS security model
         options.addArguments("--remote-debugging-port=9222"); // Activating DevToolsActivePort
-        driver = new ChromeDriver(options);
+        try {
+            driver = new RemoteWebDriver(new URL(sleniumGridUrl), options);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     @After
